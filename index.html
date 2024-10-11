@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Torre Hanoi</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Torre de Hanoi</h1>
+
+        <div class="game">
+
+            <div class="sticks">
+
+                <div id="stick1">
+                    <div class="block" id="block1"></div>
+                    <div class="block" id="block2"></div>
+                </div>
+
+                <div id="stick2">
+                   
+                </div>
+
+                <div id="stick3">
+   
+                </div>
+
+                <img src="img/plantilla.png" alt="stick1">
+                <img src="img/plantilla.png" alt="stick2">
+                <img src="img/plantilla.png" alt="stick3">
+
+            </div>
+            
+            <div class="info">
+    
+            </div>
+    
+        </div>
+
+        <p id="texto_numero">Escribe un numero</p>
+        <input type="number" id="input_numero" placeholder="Escribe un número" min="2"> 
+        <input type="submit" id="enviar" value="Cambiar número">
+        <br> <br>
+        <input type="submit" id="respuesta" value="Resolver">
+        <br><br>
+        <p id="texto_movimientos">0 Movimientos</p>
+        <br><br>
+        <a href="consola_ver.html">
+            <input type="button" name="console_ver" id="consola" value="Version de consola">
+        </a>
+        <br><br>
+
+        <br><p>Proyecto hecho por<br><br>Jaider Stiveen Sanchez Arciniegas<br>y<br>Kevin Blanco</p>
+    </div>
+
+    <!-- Archivo javascript -->
+    <script src="js/torre_hanoi.js"></script>
+</body>
+</html>
