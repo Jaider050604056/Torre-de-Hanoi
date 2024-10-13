@@ -20,21 +20,33 @@
             <p>--------------------------------------------------------</p>
         </div>
 
-        <p id="texto_numero">Escribe un numero</p>
-        <input type="number" id="input_numero" placeholder="Escribe un número" min="2"> 
-        <input type="submit" id="enviar" value="Cambiar número">
-        <br> <br>
-        <input type="submit" id="respuesta" value="Resolver">
-        <br><br>
-        <p id="texto_movimientos">0 Movimientos</p>
-        <br><br>
-        <a href="index.html">
-            <input type="button" name="index" value="Version Gráfica">
-        </a>
-        <br><br>
+        <div class="container">
 
-        <!-- <br><p>Proyecto hecho por<br><br>Jaider Stiveen Sanchez Arciniegas<br>y<br>Kevin Blanco</p> -->
-    </div>
+            <div class="container_flex">
+                <p id="texto_numero">2 discos</p> 
+                <p style="visibility: hidden;">........</p> 
+                <p id="texto_movimientos">0 Movimientos</p>
+            </div>
+
+            <p>
+                Numero de discos: 
+                <input type="number" id="input_numero" placeholder="Numero de discos" min="2" value="2"> <br><br>
+                <input type="submit" id="enviar" value="Cambiar número">
+            </p>
+
+            <p>
+                Multiplicador de velocidad: 
+                <input type="number" id="input_tiempo" placeholder="Multiplicador de velocidad" min="1" value="1"><br><br>
+                <input type="submit" id="respuesta" value="Resolver">
+            </p>
+
+            <br><br>
+            <a href="index.html">
+                <input type="button" name="index" value="Version Gráfica">
+            </a>
+            <br><br>
+        </div>
+   </div>
 
     <!-- Archivo javascript -->
     <script src="js/torre_hanoi_consola_ver.js"></script>

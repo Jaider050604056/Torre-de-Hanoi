@@ -13,6 +13,7 @@ input{
     font-size:medium;
     border-color: black;
     border-style:ridge;
+    text-align: center;
 }
 
 .container{
@@ -22,12 +23,16 @@ input{
     position: relative;
 }
 
+.container_flex{
+    display: inline-flex;
+}
+
 #numero{
     text-align: center;
 }
 
 .game{
-    width: 90%;
+    width: 80%;
     height: auto;
     background-color: white;
     margin: 0 auto;

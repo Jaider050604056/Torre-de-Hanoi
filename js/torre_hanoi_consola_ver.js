@@ -1,4 +1,4 @@
-const tiempo = 100;
+let tiempo;
 let contador = 0;
 // información de la consola
 const texto_torre_A = document.getElementById("Texto_TorreA");
@@ -8,35 +8,38 @@ const texto_torre_C = document.getElementById("Texto_TorreC");
 const input_numero = document.getElementById("input_numero");
 const texto_numero = document.getElementById("texto_numero");
 const botonEnviar = document.getElementById("enviar");
-const botonResolver = document.getElementById("respuesta");
+const botonResolver = document.getElementById("respuesta")
 const texto_Movimientos = document.getElementById("texto_movimientos");
+const texto_Tiempo = document.getElementById("input_tiempo");
 
 botonEnviar.addEventListener("click", function() {
     if (input_numero.value >= 2 && input_numero.value <= 10000){
         actualizar_torre();
     }
     else if (input_numero.value > 10000){
-        texto_numero.textContent = "Limite de memoria";
+        alert("Limite de memoria");
     } else {
-        texto_numero.textContent = "Numero no valido";
+        alert("Ingresa numeros validos");
     }
 });
 
 botonResolver.addEventListener("click", function() {
-    if (input_numero.value >= 2 && input_numero.value <= 10000){
+    if (input_numero.value >= 2 && input_numero.value <= 10000 && texto_Tiempo.value > 0){
         actualizar_torre();
+        desactivar_inputs();
         mover_torre();
     }
     else if (input_numero.value > 10000){
-        texto_numero.textContent = "Limite de memoria";
+        alert("Limite de memoria");
     } else {
-        texto_numero.textContent = "Numero no valido";
+        alert("Ingresa numeros validos");
     }
 });
 
 
 function actualizar_torre(){
     texto_numero.textContent = input_numero.value + " discos";
+    tiempo = 1000 / texto_Tiempo.value;
     let torreA_mostrar = [];
     for (let i = input_numero.value; i > 0; i--) {
         torreA_mostrar.push(i);
@@ -50,6 +53,24 @@ function mover_torre(){
     const discos = input_numero.value; 
     const Hanoi = new Torre_De_Hanoi(discos);
     Hanoi.Resolver();
+}
+
+function desactivar_inputs(){
+    input_numero.disabled = true;
+    texto_numero.disabled = true;
+    botonEnviar.disabled = true;
+    botonResolver.disabled = true;
+    texto_Movimientos.disabled = true;
+    texto_Tiempo.disabled = true;
+}
+
+function activar_inputs(){
+    input_numero.disabled = false;
+    texto_numero.disabled = false;
+    botonEnviar.disabled = false;
+    botonResolver.disabled = false;
+    texto_Movimientos.disabled = false;
+    texto_Tiempo.disabled = false;
 }
 
 class Pila {
@@ -154,7 +175,10 @@ class Torre_De_Hanoi {
                 } else if (i % 3 === 0) {
                     this.Movimiento_Legal(B, C); 
                 }
-            }, i * tiempo); // Ajusta el tiempo de espera según sea necesario
+                if (i == movimientos){
+                    activar_inputs();
+                }
+            }, i * tiempo); 
         }
     }
 }

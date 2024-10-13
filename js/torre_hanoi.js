@@ -1,12 +1,12 @@
-const tiempo = 10;
-let currentMove = 0;
-
+let tiempo;
+let currentMove = 10000;
 // información de los inputs
 const input_numero = document.getElementById("input_numero");
 const texto_numero = document.getElementById("texto_numero");
 const botonEnviar = document.getElementById("enviar");
 const botonResolver = document.getElementById("respuesta")
-
+const texto_Movimientos = document.getElementById("texto_movimientos");
+const texto_Tiempo = document.getElementById("input_tiempo");
 // información de los bloques
 const stick1 = document.getElementById("stick1");
 const stick2 = document.getElementById("stick2");
@@ -17,29 +17,30 @@ botonEnviar.addEventListener("click", function() {
     if (input_numero.value >= 2 && input_numero.value <= 10000){
         actualizar_torre();
     }
-    else if (input_numero.value > 10000){
-        texto_numero.textContent = "Limite de memoria";
+    else if (input_numero.value > 1000){
+        alert("Limite de memoria");
     } else {
-        texto_numero.textContent = "Numero no valido";
-    }
+        alert("Ingresa numeros validos");
+    } 
 });
 
 botonResolver.addEventListener("click", function() {
-    if (input_numero.value >= 2 && input_numero.value <= 10000){
+    if (input_numero.value >= 2 && input_numero.value <= 10000 && texto_Tiempo.value > 0){
         actualizar_torre();
+        desactivar_inputs();
         mover_torre();
     }
-    else if (input_numero.value > 10000){
-        texto_numero.textContent = "Limite de memoria";
+    else if (input_numero.value > 1000){
+        alert("Limite de memoria");
     } else {
-        texto_numero.textContent = "Numero no valido";
+        alert("Ingresa numeros validos");
     }
 });
 
 
 function actualizar_torre(){
     texto_numero.textContent = input_numero.value + " discos";
-    
+    tiempo = 1000 / texto_Tiempo.value;
 
     stick1.innerHTML = ""; 
     stick2.innerHTML = ""; 
@@ -72,6 +73,23 @@ function mover_torre(){
     Hanoi.Resolver();
 }
 
+function desactivar_inputs(){
+    input_numero.disabled = true;
+    texto_numero.disabled = true;
+    botonEnviar.disabled = true;
+    botonResolver.disabled = true;
+    texto_Movimientos.disabled = true;
+    texto_Tiempo.disabled = true;
+}
+
+function activar_inputs(){
+    input_numero.disabled = false;
+    texto_numero.disabled = false;
+    botonEnviar.disabled = false;
+    botonResolver.disabled = false;
+    texto_Movimientos.disabled = false;
+    texto_Tiempo.disabled = false;
+}
 
 class Pila {
     constructor() {
@@ -145,44 +163,10 @@ class Torre_De_Hanoi {
                 } else if (i % 3 === 0) {
                     this.Movimiento_Legal(B, C); 
                 }
-            }, i * tiempo); // Ajusta el tiempo de espera según sea necesario
-        }
-    }
-
-    animateMoves(moveSequence) {
-        const interval = setInterval(() => {
-            if (currentMove < moveSequence.length) {
-                const [from, to] = moveSequence[currentMove];
-                this.Movimiento_Legal(from, to);
-                currentMove++;
-            } else {
-                clearInterval(interval); // Detenemos el intervalo cuando se completa la secuencia
-            }
-        }, tiempo); // Ajusta el tiempo en milisegundos para la velocidad de la animación
-    }
-
-    // Renderiza la torre en la interfaz
-    renderTowers() {
-        for (let i = 0; i < 3; i++) {
-            const stick = this.torres[i];
-            const stickElement = document.getElementById(`stick${i + 1}`);
-            stickElement.innerHTML = ""; // Limpia el stick antes de volver a renderizar
-
-            let height = 0; // Inicializa la altura de los bloques
-            while (stick.peek() !== null) {
-                const block = document.createElement("div");
-                block.className = "block";
-                const diskSize = stick.pop(); // Obtiene el disco en la parte superior
-
-                // Ajustamos el tamaño y la posición del bloque
-                block.style.width = `${(25 / this.discos) * diskSize}%`;
-                block.style.height = `${(90 / this.discos)}%`;
-                block.style.top = `${(95 / this.discos) * height}%`;
-                block.style.left = `${(18 - (12 / this.discos) * diskSize)}%`;
-
-                stickElement.appendChild(block); // Agrega el bloque al stick
-                height++; // Aumenta la altura para el siguiente bloque
-            }
+                if (i == movimientos){
+                    activar_inputs();
+                }
+            }, i * tiempo); // Tiempo entre cada acción
         }
     }
 
@@ -190,27 +174,31 @@ class Torre_De_Hanoi {
         const disco = this.torres[puntoA].pop(); 
         this.torres[puntoB].push(disco); 
     
-        // Asegúrate de que el disco no sea nulo antes de proceder
-        if (disco === null) return;
-    
         // Obtén el disco del DOM
-        const blockElement = document.querySelector(`#stick${puntoA + 1} .block:nth-child(${this.torres[puntoA].Imprimir_Pila().split(',').length})`);
-    
-        if (!blockElement) {
-            console.error("Block element not found");
-            return;
-        }
+        const Bloque_Obtenido = document.querySelector(`#stick${puntoA + 1} .block:nth-child(${this.torres[puntoA].Imprimir_Pila().split(',').length})`);
         
         // Calcula la nueva posición
         const stickB = document.getElementById(`stick${puntoB + 1}`);
-        const totalBlocks = stickB.children.length;
-        const newTop = 95 - (totalBlocks * (90 / this.discos)); // Ajusta según el número de bloques en la torre
-        const newLeft = 18 - (12 / this.discos) * (totalBlocks + 1); // Posiciona el disco correctamente
-    
-        // Actualiza el estilo para mover el disco
-        blockElement.style.top = `${newTop}%`;
-        blockElement.style.left = `${newLeft}%`;
-        stickB.appendChild(blockElement); // Mueve el disco en el DOM
+        let posicionLeft;
+        let Total_Block = stickB.childElementCount;
+
+        if (stickB.id == `stick1`){
+            posicionLeft = 12;
+        } else if (stickB.id == `stick2`){
+            posicionLeft = 48.5;
+        } else if (stickB.id == `stick3`){
+            posicionLeft = 73;
+        }
+
+        const newTop = (95/this.discos) * Total_Block; 
+        // const newLeft = posicionLeft + (12 / input_numero.value) * Total_Block;
+        const newLeft = posicionLeft;
+        console.log("punto B: " + stickB.id + "\nTop: " + newTop + "\nLeft: " + newLeft + "\nbloques: " + (Total_Block));
+
+   
+        // Bloque_Obtenido .style.top = `${newTop}%`;
+        Bloque_Obtenido .style.left = `${newLeft}%`;
+        stickB.appendChild(Bloque_Obtenido);
     
         this.Imprimir_Torres();
         contador += 1;
