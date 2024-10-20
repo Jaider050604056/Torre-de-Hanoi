@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-
+    <!-- Contenedor de todo lo visual en la pagina-->
     <div class="container">
         <h1>Torre de Hanoi</h1>
-
+        <!-- Contenedor del juego, bloques y palos-->
         <div class="game">
 
             <div class="sticks">
@@ -34,18 +34,18 @@
             </div>
     
         </div>
-        
+        <!-- Contenedor de botones y cajas de textos que controlan el juego -->
         <div class="container">
 
             <div class="container_flex">
-                <p id="texto_numero">2 discos</p> 
+                <p id="texto_numero">2 bloques</p> 
                 <p style="visibility: hidden;">........</p> 
                 <p id="texto_movimientos">0 Movimientos</p>
             </div>
 
             <p>
-                Numero de discos: 
-                <input type="number" id="input_numero" placeholder="Numero de discos" min="2" value="2"> <br><br>
+                Numero de bloques: 
+                <input type="number" id="input_numero" placeholder="Numero de bloques" min="2" value="2"> <br><br>
                 <input type="submit" id="enviar" value="Cambiar número">
             </p>
 

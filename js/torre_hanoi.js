@@ -1,3 +1,4 @@
+// Valores de movimiento de bloques
 let tiempo;
 let currentMove = 10000;
 // información de los inputs
@@ -12,7 +13,7 @@ const stick1 = document.getElementById("stick1");
 const stick2 = document.getElementById("stick2");
 const stick3 = document.getElementById("stick3");
 
-
+// Evento de cuando se activa el botón "Enviar"
 botonEnviar.addEventListener("click", function() {
     if (input_numero.value >= 2 && input_numero.value <= 10000){
         actualizar_torre();
@@ -23,7 +24,7 @@ botonEnviar.addEventListener("click", function() {
         alert("Ingresa numeros validos");
     } 
 });
-
+// Evento de cuando se activa el botón "Resolver"
 botonResolver.addEventListener("click", function() {
     if (input_numero.value >= 2 && input_numero.value <= 10000 && texto_Tiempo.value > 0){
         actualizar_torre();
@@ -36,10 +37,9 @@ botonResolver.addEventListener("click", function() {
         alert("Ingresa numeros validos");
     }
 });
-
-
+// Función para actualizar la posición de los bloques en la torre
 function actualizar_torre(){
-    texto_numero.textContent = input_numero.value + " discos";
+    texto_numero.textContent = input_numero.value + " bloques";
     tiempo = 1000 / texto_Tiempo.value;
 
     stick1.innerHTML = ""; 
@@ -64,15 +64,15 @@ function actualizar_torre(){
         stick1.appendChild(block);
     }
 }
-
+// Función para mover los bloques de torre a torre
 function mover_torre(){
     console.clear();
     contador = 0;
-    const discos = input_numero.value; 
-    const Hanoi = new Torre_De_Hanoi(discos);
+    const bloques = input_numero.value; 
+    const Hanoi = new Torre_De_Hanoi(bloques);
     Hanoi.Resolver();
 }
-
+// Función para desactivar los inputs para evitar errores
 function desactivar_inputs(){
     input_numero.disabled = true;
     texto_numero.disabled = true;
@@ -81,7 +81,7 @@ function desactivar_inputs(){
     texto_Movimientos.disabled = true;
     texto_Tiempo.disabled = true;
 }
-
+// Función para activar los inputs cuando la torre ya esté resuelta
 function activar_inputs(){
     input_numero.disabled = false;
     texto_numero.disabled = false;
@@ -90,7 +90,7 @@ function activar_inputs(){
     texto_Movimientos.disabled = false;
     texto_Tiempo.disabled = false;
 }
-
+// Pila a base de nodos que representa una torre
 class Pila {
     constructor() {
         this.top = null;
@@ -133,24 +133,25 @@ class Pila {
         return resultado.reverse().toString(); 
     }
 }
-
+// Clase que resuelve la torre de Hanoi
 class Torre_De_Hanoi {
-    constructor(discos) {
-        this.discos = discos;
+    // Constructor que usa 3 pilas representando cada torre
+    constructor(bloques) {
+        this.bloques = bloques;
         this.torres = [new Pila(), new Pila(), new Pila()]; 
-        for (let i = discos; i > 0; i--) {
+        for (let i = bloques; i > 0; i--) {
             this.torres[0].push(i); 
         }
     }
-
+    // Función que resuelve y administra cada movimiento de la torre
     Resolver() {
         let A = 0, B = 1, C = 2; 
-        const movimientos = Math.pow(2, this.discos) - 1; 
+        const movimientos = Math.pow(2, this.bloques) - 1; 
     
         console.log("--------------");
         this.Imprimir_Torres();
     
-        if (this.discos % 2 === 0) {
+        if (this.bloques % 2 === 0) {
             [B, C] = [C, B];
         }
     
@@ -166,58 +167,54 @@ class Torre_De_Hanoi {
                 if (i == movimientos){
                     activar_inputs();
                 }
-            }, i * tiempo); // Tiempo entre cada acción
+            }, i * tiempo);
         }
     }
-
-    Mover_Disco(puntoA, puntoB) {
-        const disco = this.torres[puntoA].pop(); 
-        this.torres[puntoB].push(disco); 
+    // Función que mueve cada Bloque de un punto A a punto B
+    Mover_Bloque(puntoA, puntoB) {
+        
+        const bloque = this.torres[puntoA].pop(); 
+        this.torres[puntoB].push(bloque); 
     
-        // Obtén el disco del DOM
         const Bloque_Obtenido = document.querySelector(`#stick${puntoA + 1} .block:nth-child(${this.torres[puntoA].Imprimir_Pila().split(',').length})`);
         
-        // Calcula la nueva posición
-        const stickB = document.getElementById(`stick${puntoB + 1}`);
+        const Palo_PuntoB = document.getElementById(`stick${puntoB + 1}`);
         let posicionLeft;
-        let Total_Block = stickB.childElementCount;
+        let Total_Block = Palo_PuntoB.childElementCount;
 
-        if (stickB.id == `stick1`){
+        if (Palo_PuntoB.id == `stick1`){
             posicionLeft = 12;
-        } else if (stickB.id == `stick2`){
+        } else if (Palo_PuntoB.id == `stick2`){
             posicionLeft = 48.5;
-        } else if (stickB.id == `stick3`){
+        } else if (Palo_PuntoB.id == `stick3`){
             posicionLeft = 73;
         }
 
-        const newTop = (95/this.discos) * Total_Block; 
-        // const newLeft = posicionLeft + (12 / input_numero.value) * Total_Block;
-        const newLeft = posicionLeft;
-        console.log("punto B: " + stickB.id + "\nTop: " + newTop + "\nLeft: " + newLeft + "\nbloques: " + (Total_Block));
-
-   
-        // Bloque_Obtenido .style.top = `${newTop}%`;
-        Bloque_Obtenido .style.left = `${newLeft}%`;
-        stickB.appendChild(Bloque_Obtenido);
+        const nuevo_bottom = (95/this.bloques) * Total_Block; 
+        const nuevo_left = posicionLeft;
+    
+        // Bloque_Obtenido.style.top = null;
+        // Bloque_Obtenido.style.bottom = `${nuevo_bottom}%`;
+        Bloque_Obtenido.style.left = `${nuevo_left}%`;
+        Palo_PuntoB.appendChild(Bloque_Obtenido);
     
         this.Imprimir_Torres();
         contador += 1;
         texto_Movimientos.textContent = contador + " movimientos";
     }
-    
-
+    // Función que comprueba si el movimiento del Bloque es legal
     Movimiento_Legal(puntoA, puntoB) {
-        const disco_Origen = this.torres[puntoA].peek(); 
-        const disco_Destino = this.torres[puntoB].peek(); 
+        const bloque_Origen = this.torres[puntoA].peek(); 
+        const bloque_Destino = this.torres[puntoB].peek(); 
 
         
-        if (this.torres[puntoB].Si_Esta_Vacio() || (disco_Origen !== null && disco_Origen < disco_Destino)) {
-            this.Mover_Disco(puntoA, puntoB); 
+        if (this.torres[puntoB].Si_Esta_Vacio() || (bloque_Origen !== null && bloque_Origen < bloque_Destino)) {
+            this.Mover_Bloque(puntoA, puntoB); 
         } else {
-            this.Mover_Disco(puntoB, puntoA);
+            this.Mover_Bloque(puntoB, puntoA);
         }
     }
-
+    // Función que imprime las torres en la consola 
     Imprimir_Torres() {
         console.log("A:", this.torres[0].Imprimir_Pila());
         console.log("B:", this.torres[1].Imprimir_Pila());
@@ -225,7 +222,7 @@ class Torre_De_Hanoi {
         console.log("--------------");
     }
 }
-
+// Nodo basico
 class Nodo {
     constructor(valor) {
         this.valor = valor; 
